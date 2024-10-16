@@ -1,0 +1,29 @@
+name: linux
+
+on:
+  push:
+    branches: ['*']
+    tags-ignore: ['*']
+  pull_request:
+  
+env:
+  DEBIAN_FRONTEND: noninteractive
+  
+jobs:
+   makefile-dot-pl:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: |
+         perl Makefile.PL && make test 
+
+   carton-prove:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: |
+         apt-get install libapp-carton-perl
+         carton install
+         carton exec -- prove -l t
